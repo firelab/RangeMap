@@ -140,7 +140,8 @@ generate_species_occurrence_layer<- function(raster_path,
   message("Generating species occurrence raster")
 
   # Load raster, ignoring the .dbf file
-  ras<- terra::rast(raster_path, opts = "DBF=NO")
+  ras<- terra::rast(raster_path)
+  levels(ras)<- NULL  # break connection with .dbf file
 
   # Reproject AOI
   # If AOI is a file path to .shp or .tif, read these in

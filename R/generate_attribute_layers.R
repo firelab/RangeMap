@@ -163,7 +163,8 @@ generate_attribute_layers<- function(raster_path,
   message("Prepping data")
 
   # Load raster, ignoring the .dbf file
-  ras<- terra::rast(raster_path, opts = "DBF=NO")
+  ras<- terra::rast(raster_path)
+  levels(ras)<- NULL  # break connection with .dbf file
 
   # Reproject AOI
   # If AOI is a file path to .shp or .tif, read these in
