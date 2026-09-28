@@ -162,8 +162,8 @@ generate_attribute_layers_explicit<- function(raster_path,
   # Start running raster data here
   message("Prepping data")
 
-  # Load raster
-  ras<- terra::rast(raster_path)
+  # Load raster, ignoring the .dbf file
+  ras<- terra::rast(raster_path, opts = "DBF=NO")
 
   # Reproject AOI
   # If AOI is a file path to .shp or .tif, read these in
@@ -203,7 +203,7 @@ generate_attribute_layers_explicit<- function(raster_path,
   tile_dim<- max(floor(sqrt(max_cells)), 500) * tile_size_adjustment
 
   # Generate tiles, only needs to be done once regardless of the number of attributes being generated
-  manual_make_tiles<- function(
+  manual_makeTiles<- function(
     ras,
     tile_dim,
     tile_temp_dir,

@@ -1,11 +1,11 @@
 #' Generate raster layers of species occurrence.
-#' 
+#'
 #' -- Warning! --
 #' This feature should be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
 #' RangeMap is likely to indicate species occurrence extending beyond the known range of a species; these results should be viewed with caution!
-#' 
-#' This function will only work for species whose occurrence is tracked already in the RangeMap attribute table. For example, all species defined as Sage Grouse preferred forbs are tracked in this pre-generated field, but forbs that are not Sage Grouse preferred forbs are not necessarily tracked. Unaddressed species can be run individually to add to a RangeMap_Attributes.csv file - contact scott.zimmer@usda.gov for assistance. 
-#' 
+#'
+#' This function will only work for species whose occurrence is tracked already in the RangeMap attribute table. For example, all species defined as Sage Grouse preferred forbs are tracked in this pre-generated field, but forbs that are not Sage Grouse preferred forbs are not necessarily tracked. Unaddressed species can be run individually to add to a RangeMap_Attributes.csv file - contact scott.zimmer@usda.gov for assistance.
+#'
 #' @param raster_path Path to RangeMap raster file for a single year
 #' @param attributes_path Path to attributes table file. It is preferable to use the RangeMap_Attributes.csv so full field names are preserved, but a tif.vat.dbf file associated with one year's raster may be used
 #' @param species_codes Exact species code(s) for which to generate a species occurrence raster layer. A single raster layer will be generated showing pixels where ANY of the species code(s) provided occur. See note above regarding species codes needing to be tracked in an attribute field
@@ -29,11 +29,11 @@ generate_species_occurrence_layer<- function(raster_path,
   message("Prepping data")
   # Check output directory path
   if (!dir.exists(output_directory)) dir.create(output_directory, recursive = TRUE, showWarnings = FALSE)
-  
+
   # Set up persistent temp directory for raster tiles
   tile_temp_dir<- file.path(tempdir(), paste0("tiles_", format(Sys.time(), "%Y%m%d%H%M%S")))
   dir.create(tile_temp_dir, showWarnings = FALSE)
-  
+
   # Check if the attributes path is csv or dbf, then load attributes
   if(endsWith(attributes_path, ".dbf")){
     attributes<- foreign::read.dbf(attributes_path)
@@ -43,8 +43,8 @@ generate_species_occurrence_layer<- function(raster_path,
   } else{
     message("Expected .csv or .dbf file, something else provided")
   }
-  
-  
+
+
   # Generate new column indicating occurrence of ANY of the provided species code(s)
   attributes_species<- attributes[,startsWith(names(attributes), "Species")]
   #
@@ -57,16 +57,16 @@ generate_species_occurrence_layer<- function(raster_path,
   #
   species_occurrence$occurrence_numeric<- NA
   species_occurrence$occurrence_numeric[species_occurrence$occurrence=="TRUE"]<- 1
-  
+
   # Filter to RM_ID and species occurrence
-  fields<- data.frame("RM_ID" = attributes$RM_ID, 
+  fields<- data.frame("RM_ID" = attributes$RM_ID,
                       "Occurrence" = species_occurrence$occurrence_numeric)
   #
-  
+
   # Write functions to process the files in parallel, with automatic retry of failed tiles
   process_tile<- function(tile_path){
     out_path<- file.path(tile_temp_dir, paste0("processed_", basename(tile_path)))
-    
+
     tryCatch({
       r<- terra::rast(tile_path)
       # Extract raw pixel values as a single vector
@@ -74,13 +74,13 @@ generate_species_occurrence_layer<- function(raster_path,
       # Generate attribute lookup table
       id_col_name<- names(final_fields)[1]
       attr_df<- final_fields[, -1, drop = FALSE]
-      
+
       # Run vectorized lookup (maps every pixel ID to corresponding row index in final_fields)
       row_idx<- match(pixel_ids, final_fields[[id_col_name]])
-      
+
       # Create the mapped matrix (rows = pixels, cols = attribute layers)
       mapped_matrix<- as.matrix(attr_df[row_idx, , drop = FALSE])
-      
+
       # Build output raster
       out_raster<- terra::rast(r, nlyrs = ncol(mapped_matrix))
       names(out_raster)<- colnames(mapped_matrix)
@@ -89,11 +89,11 @@ generate_species_occurrence_layer<- function(raster_path,
       #
       terra::writeRaster(out_raster, out_path,
                          overwrite = TRUE, datatype = "INT4S", NAflag = -9999)
-      
+
       rm(r, out_raster, pixel_ids, row_idx, mapped_matrix); gc()
-      
+
       list(tile = tile_path, status = "success", error = NA_character_)
-      
+
     }, error = function(e){
       # Remove any partial output left behind by a failed tile being written
       if (file.exists(out_path)) file.remove(out_path)
@@ -104,12 +104,12 @@ generate_species_occurrence_layer<- function(raster_path,
   run_tiles<- function(tiles_to_process, max_retries = 5){
     # Track failed tiles so they can be re-run
     all_failed_log<- list()
-    
+
     for (attempt in seq_len(max_retries + 1)){
       if (length(tiles_to_process) == 0) break
-      
+
       cores<- min(n_cores, length(tiles_to_process))
-      
+
       if (cores > 1){
         cl<- parallel::makeCluster(cores)
         parallel::clusterExport(cl, varlist = c("final_fields", "tile_temp_dir"), envir = environment())
@@ -121,27 +121,27 @@ generate_species_occurrence_layer<- function(raster_path,
       } else {
         results<- lapply(tiles_to_process, process_tile)
       }
-      
+
       results_df<- do.call(rbind, lapply(results, as.data.frame, stringsAsFactors = FALSE))
       failed<- results_df$tile[results_df$status == "failed"]
       all_failed_log[[attempt]]<- results_df[results_df$status == "failed", ]
-      
+
       if (length(failed) == 0){
         return(list(failed_tiles = character(0)))
       }
       failed_errors<- results_df$error[results_df$status == "failed"]
       tiles_to_process<- failed
     }
-    
+
     list(failed_tiles = tiles_to_process, log = do.call(rbind, all_failed_log))
   }
-  
+
   # Start running raster data here
   message("Generating species occurrence raster")
-  
-  # Load raster
-  ras<- terra::rast(raster_path)
-  
+
+  # Load raster, ignoring the .dbf file
+  ras<- terra::rast(raster_path, opts = "DBF=NO")
+
   # Reproject AOI
   # If AOI is a file path to .shp or .tif, read these in
   if(inherits(AOI, "character") && endsWith(AOI, ".shp")){
@@ -158,14 +158,14 @@ generate_species_occurrence_layer<- function(raster_path,
     message("Expected AOI to be either a path to a .shp or .tif,
             or a terra or sf object. Please provide one of these.")
   }
-  
+
   # Mask / crop the raster to the AOI
   if(class(AOI_proj)[1] == "SpatExtent"){
     ras<- terra::crop(ras, AOI_proj)
   } else if(class(AOI_proj)[1] == "SpatVector"){
     ras<- terra::crop(ras, AOI_proj, mask=T)
   }
-  
+
   # Begin to work on raster generation
   if(is.null(n_cores)){
     n_cores<- max(1, ceiling(parallel::detectCores() * 0.4))
@@ -175,7 +175,7 @@ generate_species_occurrence_layer<- function(raster_path,
   budget_bytes<- ((freeRAM_mb * 0.5) / n_cores) * 1024^2
   max_cells<- budget_bytes / (32 * 20)
   tile_dim<- max(floor(sqrt(max_cells)), 500) * tile_size_adjustment
-  
+
   # Generate tiles, only needs to be done once regardless of the number of attributes being generated
   terra::setGDALconfig("GDAL_PAM_ENABLED", "NO")
   tile_files<- terra::makeTiles(
@@ -190,11 +190,11 @@ generate_species_occurrence_layer<- function(raster_path,
     final_fields<- fields
     #
     tile_result<- run_tiles(tile_files, max_retries = 5)
-    
+
     if (length(tile_result$failed_tiles) > 0){
       stop("Tiles are failing during processing. Try reducing tile_size_adjustment to less than 1!")
     }
-    
+
     # Mosaic all processed tiles into one raster (multiband if mulutple attributes selected)
     # Direct to processed tiles
     processed_tiles<- list.files(
@@ -202,11 +202,11 @@ generate_species_occurrence_layer<- function(raster_path,
       pattern = "processed_tile",
       full.names = TRUE
     )
-    
+
     message("Saving species occurrence raster")
     terra::setGDALconfig("GDAL_MAX_DATASET_POOL_SIZE", "1000")
     terra::setGDALconfig("GDAL_CACHEMAX","4000")
-    
+
     # Export single mosaicked raster of processed attributes
     vrt_file<- file.path(tile_temp_dir, "vrt.vrt")
     terra::vrt(processed_tiles,vrt_file, set_names = TRUE, overwrite=T)
@@ -217,7 +217,7 @@ generate_species_occurrence_layer<- function(raster_path,
     #
     dt<- "INT1U"
     nodata<- 255
-      
+
     if(file.exists(out_tif)){
         warning(paste0(out_tif), " already exists and will be overwritten")
     }
@@ -230,12 +230,12 @@ generate_species_occurrence_layer<- function(raster_path,
         gdal = c("COMPRESS=DEFLATE", "ZLEVEL=8", "PREDICTOR=2",
                  "TILED=YES", "BLOCKXSIZE=512", "BLOCKYSIZE=512",
                  "NUM_THREADS=ALL_CPUS", "SPARSE_OK=YES", "BIGTIFF=YES"))
-    
+
     # Clean up processed tiles
     file.remove(processed_tiles)
     file.remove(vrt_file)
     unlink(tile_temp_dir, recursive = TRUE)
 }
-    
-   
+
+
 
