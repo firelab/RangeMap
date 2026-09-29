@@ -1,11 +1,11 @@
-#' Load an attributes file (.csv or .dbf) and get attribute names
+#' Load an attributes file (.csv or .dbf) and get attribute names / indices
 #'
-#' @param attributes_path Path to attributes file. Preferable to use the RangeMap_Attribute.csv so full field names are preserved, but the .tif.vat.dbf associated with one year's raster also works.
-#' @return Names of all numeric attributes that can be generated
+#' @param attributes_path Path to attributes file. Preferable to use the RangeMap_Attribute.csv so full field names are preserved, but the .tif.vat.dbf associated with one year's raster may also be used
+#' @return The column index and the name of all numeric attributes that can be generated
 #' @export
 #'
 load_attribute_names<- function(attributes_path){
-  
+
   # Check if the attributes path is csv or dbf, then load it
   if(endsWith(attributes_path, ".dbf")){
     atts<- foreign::read.dbf(attributes_path)
@@ -15,12 +15,15 @@ load_attribute_names<- function(attributes_path){
   } else{
     message("Expected .csv or .dbf file, something else provided")
   }
-  
+
   # Get attribute names, and remove extraneous data
   attribute_names<- names(atts)
+  attribute_names<- attribute_names[sapply(atts, is.numeric)]
   attribute_names<- attribute_names[-which(attribute_names %in% c("Value", "RM_ID", "Count", "PrimaryKey", "DataSource"))]
+
+  # Arrange into dataframe for easy reading
+  attributes<- data.frame("index" = seq(1,length(attribute_names), 1),
+                          "attribute_name" = attribute_names)
   #
-  return(attribute_names)
+  return(attributes)
 }
-
-

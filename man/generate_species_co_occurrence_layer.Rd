@@ -11,7 +11,7 @@ generate_species_co_occurrence_layer(
   AOI,
   output_directory,
   n_cores = NULL,
-  tile_size_adjustment = 1
+  tile_size_adjustment = NULL
 )
 }
 \arguments{
@@ -19,13 +19,13 @@ generate_species_co_occurrence_layer(
 
 \item{attributes_path}{Path to attributes table file. It is preferable to use the RangeMap_Attributes.csv so full field names are preserved, but a tif.vat.dbf file associated with one year's raster may be used}
 
-\item{species_codes}{Exact species code(s) for which to generate a species occurrence raster layer. A single raster layer will be generated showing pixels where ALL of the species code(s) provided occur. See note above regarding species codes needing to be tracked in an attribute field}
+\item{species_codes}{Exact species code(s) for which to generate a species occurrence raster layer. A single raster layer will be generated showing pixels where ALL of the provided species code(s) occur. See note above regarding species codes needing to be tracked in an attribute field}
 
-\item{AOI}{Area of interest. Spatial area for generating raster layers. This can be a polygon or raster loaded into environment (as terra of sf object), or a file path to a .shp or .tif}
+\item{AOI}{Area of interest. Spatial area for generating raster layers. This can be a polygon or raster loaded into environment as a terra of sf object, or a file path to a .shp or .tif}
 
 \item{output_directory}{Full directory path for the output rasters (not a file path). Does not need to already exist}
 
-\item{n_cores}{Optional. Sets the number of cores to use (defaults to 40\% of total cores)}
+\item{n_cores}{Optional. Sets the number of cores to use (default is 40\% of total cores)}
 
 \item{tile_size_adjustment}{Optional. Adjust sizing of tiles run in parallel. Set this to less than 1 if raster generation fails}
 }
@@ -34,9 +34,9 @@ Raster file showing occurrence of any of the species codes provided
 }
 \description{
 -- Warning! --
-This feature should be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
+This feature should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
 RangeMap is likely to indicate species occurrence extending beyond the known range of a species; these results should be viewed with caution!
 }
 \details{
-This function will only work for species whose occurrence is tracked already in the RangeMap attribute table. For example, all species defined as Sage Grouse preferred forbs are tracked in this pre-generated field, but forbs that are not Sage Grouse preferred forbs are not necessarily tracked. Unaddressed species can be run individually to add to a RangeMap_Attributes.csv file - contact scott.zimmer@usda.gov for assistance.
+This function will only work for species whose occurrence is tracked already in the RangeMap attribute table. For example, all species defined as Sage Grouse preferred forbs are tracked in this pre-generated field, but forbs that are not Sage Grouse preferred forbs are not necessarily tracked. Unaddressed species can be added to RangeMap_Attributes.csv file to enable this workflow - contact scott.zimmer@usda.gov for assistance
 }

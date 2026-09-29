@@ -2,18 +2,36 @@
 #'
 #' @param raster_path Path to RangeMap raster file for a single year
 #' @param attributes_path Path to attributes table file. It is preferable to use the RangeMap_Attributes.csv so full field names are preserved, but a tif.vat.dbf file associated with one year's raster may be used
-#' @param attribute_names Names of attributes desired for generating raster layers. These must match names in the attributes table file
-#' @param AOI Area of interest. Spatial area for generating raster layers. This can be a polygon or raster loaded into environment (as terra of sf object), or a file path to a .shp or .tif
-#' @param output_directory Full directory path for the output rasters (not a file path). Does not need to already exist
-#' @param n_cores Optional. Sets the number of cores to use (defaults to 40% of total cores)
+#' @param attribute_ids Vector of attribute names desired for generating raster layers. These must match attribute names from the attributes table file exactly. The indices of numeric columns returned from load_attribute_names may also be used
+#' @param AOI Area of interest. Spatial area for generating raster layers. This can be a polygon or raster loaded into environment as a terra of sf object, or a file path to a .shp or .tif
+#' @param output_directory Full directory path for output rasters (not a file path). Does not need to already exist
+#' @param n_cores Optional. Sets the number of cores to use (default is 40% of total cores)
 #' @param tile_size_adjustment Optional. Adjust sizing of tiles run in parallel. Set this to less than 1 if raster generation fails
 #' @return Raster files of each desired attribute
 #' @export
 #'
+#' @examples
+#'
+#' # First load attribute names
+#' attribute_names<- load_attribute_names(attributes_path)
+#'
+#' # Make vector of the desired attribute names (or the column indices of the desired attributes returned by load_attributes)
+#' attribute_ids<- attribute_names$attribute_name[c(1:2, 77, 120)]   # Vector of attribute names
+#' attribute_ids<- c(1:2, 77, 120) # Vector of numeric column indices returned from load_attribute_names
+#'
+#'
+#' # Generate the desired attributes
+#' generate_attribute_layers(raster_path = raster_path,
+#'                           attributes_path = attributes_path,
+#'                           attribute_ids = attribute_ids,
+#'                           AOI = AOI,
+#'                           output_directory = output_directory)
+#'
+#'
 #'
 generate_attribute_layers<- function(raster_path,
                                      attributes_path,
-                                     attribute_names,
+                                     attribute_ids,
                                      AOI,
                                      output_directory,
                                      n_cores = NULL,
@@ -37,22 +55,28 @@ generate_attribute_layers<- function(raster_path,
     message("Expected .csv or .dbf file, something else provided")
   }
 
-  # Check attribute names
-  if (!inherits(attribute_names, "character")){
-    stop("Error: Invalid attribute names. Attribute names must be names (characters) not numeric indices")
-  }
-
-  # Check for missing attributes
-  missing_attrs<- setdiff(attribute_names, names(attributes))
-  if (length(missing_attrs) > 0) {
-    stop("Error: Attribute(s) requested not found in attributes table: ", paste(missing_attrs, collapse = ", "))
-  }
-
   # Limit to numeric attributes and round them
   attributes<- attributes |>
     dplyr::select(dplyr::where(is.numeric)) |>
     dplyr::mutate(dplyr::across(dplyr::everything(), round))
   #
+  # Remove "Value" and "Count" columns if table source is .dbf
+  if(endsWith(attributes_path, ".dbf")){
+    attributes<- attributes |>
+      dplyr::select(-c(Value, Count))
+  }
+
+  # Check attribute names
+  if (!inherits(attribute_ids, "character")){
+    attribute_ids<- names(attributes[attribute_ids+1])
+  }
+
+  # Check for missing attributes
+  missing_attrs<- setdiff(attribute_ids, names(attributes))
+  if (length(missing_attrs) > 0) {
+    stop("Error: Attribute(s) requested not found in attributes table: ", paste(missing_attrs, collapse = ", "))
+  }
+
 
   # Work with attributes table first, calculate min/max to assign data types
   attributes_min_max<- attributes[1:2,]
@@ -83,7 +107,7 @@ generate_attribute_layers<- function(raster_path,
     }
   }
   #
-  fields<- attributes[,c(1, which(names(attributes) %in% attribute_names))]
+  fields<- attributes[,c(1, which(names(attributes) %in% attribute_ids))]
 
 
   # Write functions to process the files in parallel, with automatic retry of failed tiles
@@ -218,8 +242,8 @@ generate_attribute_layers<- function(raster_path,
   # Split attributes up if more than 10 are selected. Otherwise memory issues may arise
   max_per_batch<- 5
   attribute_batches<- split(
-    attribute_names,
-    ceiling(seq_along(attribute_names) / max_per_batch)
+    attribute_ids,
+    ceiling(seq_along(attribute_ids) / max_per_batch)
   )
   #if (length(attribute_batches) > 1){
   #  message(sprintf("Splitting attributes into %d batches to reduce memory overhead",
@@ -288,7 +312,7 @@ generate_attribute_layers<- function(raster_path,
       if(file.exists(out_tif)){
         warning(paste0(out_tif), " already exists and will be overwritten")
       }
-      terra::writeRaster(
+      suppressWarnings(terra::writeRaster(
         r[[band]],
         out_tif,
         datatype = dt,
@@ -296,7 +320,7 @@ generate_attribute_layers<- function(raster_path,
         overwrite = T,
         gdal = c("COMPRESS=DEFLATE", "ZLEVEL=8", "PREDICTOR=2",
                  "TILED=YES", "BLOCKXSIZE=512", "BLOCKYSIZE=512",
-                 "NUM_THREADS=ALL_CPUS", "SPARSE_OK=YES", "BIGTIFF=YES"))
+                 "NUM_THREADS=ALL_CPUS", "SPARSE_OK=YES", "BIGTIFF=YES")))
 
     }
 

@@ -7,7 +7,7 @@
 generate_attribute_layers(
   raster_path,
   attributes_path,
-  attribute_names,
+  attribute_ids,
   AOI,
   output_directory,
   n_cores = NULL,
@@ -19,13 +19,13 @@ generate_attribute_layers(
 
 \item{attributes_path}{Path to attributes table file. It is preferable to use the RangeMap_Attributes.csv so full field names are preserved, but a tif.vat.dbf file associated with one year's raster may be used}
 
-\item{attribute_names}{Names of attributes desired for generating raster layers. These must match names in the attributes table file}
+\item{attribute_ids}{Vector of attribute names desired for generating raster layers. These must match attribute names from the attributes table file exactly. The indices of numeric columns returned from load_attribute_names may also be used}
 
-\item{AOI}{Area of interest. Spatial area for generating raster layers. This can be a polygon or raster loaded into environment (as terra of sf object), or a file path to a .shp or .tif}
+\item{AOI}{Area of interest. Spatial area for generating raster layers. This can be a polygon or raster loaded into environment as a terra of sf object, or a file path to a .shp or .tif}
 
-\item{output_directory}{Full directory path for the output rasters (not a file path). Does not need to already exist}
+\item{output_directory}{Full directory path for output rasters (not a file path). Does not need to already exist}
 
-\item{n_cores}{Optional. Sets the number of cores to use (defaults to 40\% of total cores)}
+\item{n_cores}{Optional. Sets the number of cores to use (default is 40\% of total cores)}
 
 \item{tile_size_adjustment}{Optional. Adjust sizing of tiles run in parallel. Set this to less than 1 if raster generation fails}
 }
@@ -34,4 +34,24 @@ Raster files of each desired attribute
 }
 \description{
 Generate raster layers of individual attributes.
+}
+\examples{
+
+# First load attribute names
+attribute_names<- load_attribute_names(attributes_path)
+
+# Make vector of the desired attribute names (or the column indices of the desired attributes returned by load_attributes)
+attribute_ids<- attribute_names$attribute_name[c(1:2, 77, 120)]   # Vector of attribute names
+attribute_ids<- c(1:2, 77, 120) # Vector of numeric column indices returned from load_attribute_names
+
+
+# Generate the desired attributes
+generate_attribute_layers(raster_path = raster_path,
+                          attributes_path = attributes_path,
+                          attribute_ids = attribute_ids,
+                          AOI = AOI,
+                          output_directory = output_directory)
+
+
+
 }

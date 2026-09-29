@@ -2,16 +2,16 @@
 % Please edit documentation in R/load_attribute_names.R
 \name{load_attribute_names}
 \alias{load_attribute_names}
-\title{Load an attributes file (.csv or .dbf) and get attribute names}
+\title{Load an attributes file (.csv or .dbf) and get attribute names / indices}
 \usage{
 load_attribute_names(attributes_path)
 }
 \arguments{
-\item{attributes_path}{Path to attributes file. Preferable to use the RangeMap_Attribute.csv so full field names are preserved, but the .tif.vat.dbf associated with one year's raster also works.}
+\item{attributes_path}{Path to attributes file. Preferable to use the RangeMap_Attribute.csv so full field names are preserved, but the .tif.vat.dbf associated with one year's raster may also be used}
 }
 \value{
-Names of all numeric attributes that can be generated
+The column index and the name of all numeric attributes that can be generated
 }
 \description{
-Load an attributes file (.csv or .dbf) and get attribute names
+Load an attributes file (.csv or .dbf) and get attribute names / indices
 }
