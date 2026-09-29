@@ -37,7 +37,7 @@ generate_species_co_occurrence_layer<- function(raster_path,
   # Check if the attributes path is csv or dbf, then load attributes
   if(endsWith(attributes_path, ".dbf")){
     attributes<- foreign::read.dbf(attributes_path)
-    warning("Attributes are from dbf file. Recommend using Attributes csv for full attribute names")
+    #warning("Attributes are from dbf file. Recommend using Attributes csv for full attribute names")
   } else if(endsWith(attributes_path, ".csv")){
     attributes<- utils::read.csv(attributes_path, check.names = F)
   } else{
@@ -54,22 +54,20 @@ generate_species_co_occurrence_layer<- function(raster_path,
   #
   species_code_pattern<- paste0("\\b", species_codes, "\\b")
   #
-  dt<- data.table::as.data.table(attributes_species)
-  #
-  # Concatenate species rows
-  row_text<- do.call(paste, c(dt, sep = " "))
+  # Concatenate species rows into one string
+  row_text <- do.call(paste, c(attributes_species, sep = " "))
 
-  # Find instances wehere all desired species codes occur
-  species_occurrence<- dt[, occurrence := Reduce(`&`, lapply(species_code_pattern, function(pat) {
+  # TRUE only where every code is found in the row
+  attributes_species$occurrence <- Reduce(`&`, lapply(species_code_pattern, function(pat) {
     grepl(pat, row_text, perl = TRUE)
-  }))]
-  #
-  species_occurrence$occurrence_numeric<- NA
-  species_occurrence$occurrence_numeric[species_occurrence$occurrence=="TRUE"]<- 1
+  }))
+
+  attributes_species$occurrence_numeric<- NA
+  attributes_species$occurrence_numeric[attributes_species$occurrence=="TRUE"]<- 1
 
   # Filter to RM_ID and species occurrence
   fields<- data.frame("RM_ID" = attributes$RM_ID,
-                      "Occurrence" = species_occurrence$occurrence_numeric)
+                      "Occurrence" = attributes_species$occurrence_numeric)
   #
 
   # Write functions to process the files in parallel, with automatic retry of failed tiles

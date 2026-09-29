@@ -15,3 +15,14 @@ The column index and the name of all numeric attributes that can be generated
 \description{
 Load an attributes file (.csv or .dbf) and get attribute names / indices
 }
+\examples{
+
+# Load attribute names
+attribute_names<- load_attribute_names(attributes_path)
+
+# Make vector of the desired attribute names (or the column indices of the desired attributes returned by load_attribute_names) needed for the generate_attribute_layers function
+attribute_ids<- attribute_names$attribute_name[c(1:2, 77, 120)]   # Vector of attribute names
+attribute_ids<- c(1:2, 77, 120) # Vector of numeric column indices returned from load_attribute_names
+
+
+}
