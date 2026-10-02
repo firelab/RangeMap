@@ -1,6 +1,7 @@
 #' Generate raster layers of species occurrence.
 #'
 #' -- Warning! --
+#'
 #' This feature should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
 #' RangeMap is likely to indicate species occurrence extending beyond the known range of a species; these results should be viewed with caution!
 #'
@@ -13,7 +14,7 @@
 #' @param output_directory Full directory path for the output rasters (not a file path). Does not need to already exist
 #' @param n_cores Optional. Sets the number of cores to use (default is 40% of total cores)
 #' @param tile_size_adjustment Optional. Adjust sizing of tiles run in parallel. Set this to less than 1 if raster generation fails
-#' @return Raster file showing occurrence of any of the species codes provided
+#' @return Raster file showing occurrence of ALL of the species codes provided
 #' @export
 #'
 #'

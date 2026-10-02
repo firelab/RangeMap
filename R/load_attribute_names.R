@@ -1,6 +1,6 @@
 #' Load an attributes file (.csv or .dbf) and get attribute names / indices
 #'
-#' @param attributes_path Path to attributes file. Preferable to use the RangeMap_Attribute.csv so full field names are preserved, but the .tif.vat.dbf associated with one year's raster may also be used
+#' @param attributes_path Path to attributes file. Preferable to use the RangeMap_Attributes.csv so full field names are preserved, but the .tif.vat.dbf associated with one year's raster may also be used
 #' @return The column index and the name of all numeric attributes that can be generated
 #' @export
 #'

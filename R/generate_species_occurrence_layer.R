@@ -1,6 +1,7 @@
 #' Generate raster layers of species occurrence.
 #'
 #' -- Warning! --
+#'
 #' This feature should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
 #' RangeMap is likely to indicate species occurrence extending beyond the known range of a species; these results should be viewed with caution!
 #'
