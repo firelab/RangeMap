@@ -111,7 +111,8 @@ generate_species_occurrence_layer(raster_path = raster_path,
                                   attributes_path = attributes_path,
                                   species_codes = c("BRTE"),
                                   AOI = AOI, 
-                                  output_directory = output_directory)
+                                  output_directory = output_directory,
+                                  n_cores=2)
 
 # Load and plot cheatgrass occurrence
 cheatgrass<- rast("E:/RangeMap/vignette/outputs/Occurrence_BRTE.tif")
@@ -135,7 +136,8 @@ generate_species_co_occurrence_layer(raster_path = raster_path,
                                   attributes_path = attributes_path,
                                   species_codes = c("BRTE","ARTRW8"),
                                   AOI = AOI, 
-                                  output_directory = output_directory)
+                                  output_directory = output_directory,
+                                  n_cores=2)
 
 # Load and plot cheatgrass and sagebrush occurrence
 cheatgrass_sage<- rast("E:/RangeMap/vignette/outputs/Occurrence_BRTEandARTRW8.tif")
