@@ -14,3 +14,7 @@ Imports:
     terra
 URL: https://github.com/snzimmer/RangeMap
 BugReports: https://github.com/snzimmer/RangeMap/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

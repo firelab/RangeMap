@@ -7,7 +7,7 @@
 #'
 #' @param raster_path Path to RangeMap raster file for a single year
 #' @param attributes_path Path to attributes table file. It is preferable to use the RangeMap_Attributes.csv so full field names are preserved, but a tif.vat.dbf file associated with one year's raster may be used
-#' @param species_codes Exact species code(s) for which to generate a species occurrence raster layer. A single raster layer will be generated showing pixels where ANY of the provided species code(s) occur. See note above regarding species codes needing to be tracked in an attribute field
+#' @param species_codes Exact USDA Plants species code(s) for which to generate a species occurrence raster layer. A single raster layer will be generated showing pixels where ANY of the provided species code(s) occur. See note above regarding species codes needing to be tracked in an attribute field
 #' @param AOI Area of interest. Spatial area for generating raster layers. This can be a polygon or raster loaded into environment as a terra of sf object, or a file path to a .shp or .tif
 #' @param output_directory Full directory path for the output rasters (not a file path). Does not need to already exist
 #' @param n_cores Optional. Sets the number of cores to use (default is 40% of total cores)

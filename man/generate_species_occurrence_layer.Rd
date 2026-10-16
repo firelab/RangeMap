@@ -19,7 +19,7 @@ generate_species_occurrence_layer(
 
 \item{attributes_path}{Path to attributes table file. It is preferable to use the RangeMap_Attributes.csv so full field names are preserved, but a tif.vat.dbf file associated with one year's raster may be used}
 
-\item{species_codes}{Exact species code(s) for which to generate a species occurrence raster layer. A single raster layer will be generated showing pixels where ANY of the provided species code(s) occur. See note above regarding species codes needing to be tracked in an attribute field}
+\item{species_codes}{Exact USDA Plants species code(s) for which to generate a species occurrence raster layer. A single raster layer will be generated showing pixels where ANY of the provided species code(s) occur. See note above regarding species codes needing to be tracked in an attribute field}
 
 \item{AOI}{Area of interest. Spatial area for generating raster layers. This can be a polygon or raster loaded into environment as a terra of sf object, or a file path to a .shp or .tif}
 
