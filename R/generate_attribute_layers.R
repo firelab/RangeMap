@@ -15,7 +15,7 @@
 #' # First load attribute names
 #' attribute_names<- load_attribute_names(attributes_path)
 #'
-#' # Make vector of the desired attribute names (or the column indices of the desired attributes returned by load_attribute_names)
+#' # Make vector of the desired attribute names (or column indices of desired attributes returned by load_attribute_names)
 #' attribute_ids<- attribute_names$attribute_name[c(1:2, 77, 120)]   # Vector of attribute names
 #' attribute_ids<- c(1:2, 77, 120) # Vector of numeric column indices returned from load_attribute_names
 #'
