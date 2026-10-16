@@ -1,0 +1,145 @@
+---
+title: "RangeMap README"
+output: github_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette shows the core functionality of the RangeMap package to work with RangeMap imputed ID rasters. It shows how to:
+
+* Generate attribute layers, read in those outputs, and perform basic analysis on them
+* Generate a layer of occurrence of a single species
+* Generate a layer of co-occurrence of multiple species
+
+## How to get started with `{RangeMap}`
+To get started you'll need to install `{RangeMap}` using the following command:
+
+```{r, eval = FALSE}
+remotes::install_github("firelab/RangeMap")
+```
+
+You must also have downloaded a RangeMap imputed ID raster for a given year, as well as the attributes associated with the raster (either in .csv or .dbf form). These data can be accessed at: https://www.fs.usda.gov/rds/archive/catalog/RDS-2026-0058
+
+
+## Preparation 
+
+First, set file paths to the:
+
+* RangeMap raster (raster of imputed IDs)
+* Attributes file
+* Desired directory for generated outputs
+
+An area of interest must also be provided. This can be either a polygon or raster loaded into the environment as a terra or sf object, or a file path to a .shp or .tif file.
+
+```{r setup, message = FALSE, warning = FALSE}
+library(RangeMap)
+library(terra)
+
+# Set paths to rangemap ID raster and attributes file
+raster_path<- "E:/RangeMap/vignette/data/RangeMap_2025.tif"
+attributes_path<- "E:/RangeMap/vignette/data/RangeMap_Attributes.csv"
+
+# Set directory for outputs
+output_directory<- "E:/RangeMap/vignette/outputs"
+
+# Load an AOI (or define path to one)
+AOI<- terra::vect("E:/RangeMap/vignette/data/BLM_NV_FieldOffices/BLM_NV_FieldOffices.shp")
+AOI<- AOI[AOI$ADMU_NAME == "Black Rock Field Office", ]
+
+```
+
+
+## Generate attribute layers
+
+The following code is used to generate a raster layer of any attribute(s) desired. There is no limit on how many attributes can be generated at once. 
+
+In the sequence below, the first step is loading the attribute names from the attributes file so the desired attribute names can be specified. Either the exact attribute names or their indices can be provided.
+```{r, message = FALSE, warning = FALSE, fig.width=6, fig.height=4}
+# Load attribute names
+all_attribute_names<- load_attribute_names(attributes_path)
+# View attribute names so you know which names / indices to use
+#all_attribute_names$attribute_name
+
+# Generate first-hit and any-hit cheatgrass cover
+    # indices 31 and 67 are first-hit and any-hit cheatgrass cover
+attribute_names<- all_attribute_names$attribute_name[c(31,67)]
+
+generate_attribute_layers(raster_path = raster_path,
+                          attributes_path = attributes_path,
+                          attribute_ids = attribute_names,
+                          AOI = AOI,
+                          output_directory = output_directory,
+                          n_cores=2)
+
+# Load the cheatgrass outputs
+fh_cheatgrass<- rast("E:/RangeMap/vignette/outputs/FirstHit_CheatgrassCover.tif")
+ah_cheatgrass<- rast("E:/RangeMap/vignette/outputs/AnyHit_CheatgrassCover.tif")
+
+# Calculate the difference in FirstHit and AnyHit cheatgrass cover (understory cover)
+understory_cheatgrass<- ah_cheatgrass - fh_cheatgrass
+names(understory_cheatgrass)<- "Understory_CheatgrassCover(%)"
+
+# Plot understory cheatgrass cover
+breaks<- quantile(values(understory_cheatgrass, na.rm=T), probs = seq(0, 1, by = 0.10))
+plot(understory_cheatgrass, breaks = unique(breaks), 
+     col = hcl.colors(length(unique(breaks)) - 1, "Viridis"),
+     main = "Understory Cheatgrass Cover (%)")
+
+# Summarize understory cheatgrass cover
+summary(values(understory_cheatgrass, na.rm=T))
+
+```
+
+## Generate a species occurrence layer
+
+Next, generate a raster layer displaying areas of occurrence of a species using the *generate_species_occurrence_layer* function. This function returns a single raster layer, but can accept either one or multiple USDA Plants species codes. If multiple codes are provided, the function returns a layer with occurrence of ANY of the provided species.
+
+**Warning:** This function should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range. RangeMap is likely to indicate species occurrence extending beyond the known range of a species; these results should be viewed with caution.
+
+
+```{r, message = FALSE, warning = FALSE, fig.width=6, fig.height=4}
+# Generate cheatgrass occurrence raster
+generate_species_occurrence_layer(raster_path = raster_path,
+                                  attributes_path = attributes_path,
+                                  species_codes = c("BRTE"),
+                                  AOI = AOI, 
+                                  output_directory = output_directory,
+                                  n_cores=2)
+
+# Load and plot cheatgrass occurrence
+cheatgrass<- rast("E:/RangeMap/vignette/outputs/Occurrence_BRTE.tif")
+levels(cheatgrass)<- data.frame(id = 1, label = "BRTE present")
+plot(cheatgrass, col = "forestgreen", plg = list(x = "bottomright"),
+     main = "Cheatgrass Occurrence")
+
+```
+
+## Generate a species co-occurrence layer
+
+Next, generate a raster layer displaying areas of co-occurrence of multiple species using the *generate_species_co_occurrence_layer* function. This function returns a single raster layer, and accepts multiple USDA Plants species codes. The function returns a layer with occurrence of ALL of the provided species.
+
+**Warning:** This function should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range. RangeMap is likely to indicate species occurrence extending beyond the known range of a species; these results should be viewed with caution.
+
+
+
+```{r, message = FALSE, warning = FALSE, fig.width=6, fig.height=4}
+# Generate cheatgrass co-occurrence with Wyoming big sagebrush raster
+generate_species_co_occurrence_layer(raster_path = raster_path,
+                                  attributes_path = attributes_path,
+                                  species_codes = c("BRTE","ARTRW8"),
+                                  AOI = AOI, 
+                                  output_directory = output_directory,
+                                  n_cores=2)
+
+# Load and plot cheatgrass and sagebrush occurrence
+cheatgrass_sage<- rast("E:/RangeMap/vignette/outputs/Occurrence_BRTEandARTRW8.tif")
+levels(cheatgrass_sage)<- data.frame(id = 1, label = "BRTE and ARTRW8 present")
+plot(cheatgrass_sage, col = "forestgreen", plg = list(x = "bottomright"),
+     main = "Cheatgrass and Wyoming Big Sagebrush Co-Occurrence")
+
+```
