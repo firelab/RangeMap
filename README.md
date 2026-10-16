@@ -40,14 +40,15 @@ library(RangeMap)
 library(terra)
 
 # Set paths to rangemap ID raster and attributes file
-raster_path<- "E:/RangeMap/vignette/data/RangeMap_2025.tif"
-attributes_path<- "E:/RangeMap/vignette/data/RangeMap_Attributes.csv"
+raster_path<- system.file("extdata", "RangeMap_2025.tif", package = "RangeMap")
+attributes_path<- system.file("extdata", "RangeMap_Attributes.csv", package = "RangeMap")
 
 # Set directory for outputs
-output_directory<- "E:/RangeMap/vignette/outputs"
+output_directory<- file.path(tempdir(), "RangeMap_outputs")
 
 # Load an AOI (or define path to one)
-AOI<- terra::vect("E:/RangeMap/vignette/data/BLM_NV_FieldOffices/BLM_NV_FieldOffices.shp")
+AOI_path<- system.file("extdata", "BLM_NV_FieldOffices/BLM_NV_FieldOffices.shp", package = "RangeMap")
+AOI<- terra::vect(AOI_path)
 AOI<- AOI[AOI$ADMU_NAME == "Black Rock Field Office", ]
 ```
 
@@ -80,8 +81,8 @@ generate_attribute_layers(raster_path = raster_path,
                           n_cores=2)
 
 # Load the cheatgrass outputs
-fh_cheatgrass<- rast("E:/RangeMap/vignette/outputs/FirstHit_CheatgrassCover.tif")
-ah_cheatgrass<- rast("E:/RangeMap/vignette/outputs/AnyHit_CheatgrassCover.tif")
+fh_cheatgrass<- rast(paste0(output_directory, "/FirstHit_CheatgrassCover.tif"))
+ah_cheatgrass<- rast(paste0(output_directory, "/AnyHit_CheatgrassCover.tif"))
 
 # Calculate the difference in FirstHit and AnyHit cheatgrass cover (understory cover)
 understory_cheatgrass<- ah_cheatgrass - fh_cheatgrass
@@ -133,42 +134,11 @@ generate_species_occurrence_layer(raster_path = raster_path,
                                   n_cores=2)
 
 # Load and plot cheatgrass occurrence
-cheatgrass<- rast("E:/RangeMap/vignette/outputs/Occurrence_BRTE.tif")
+cheatgrass<- rast(paste0(output_directory, "/Occurrence_BRTE.tif"))
+
 levels(cheatgrass)<- data.frame(id = 1, label = "BRTE present")
 plot(cheatgrass, col = "forestgreen", plg = list(x = "bottomright"),
      main = "Cheatgrass Occurrence")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
-
-## Generate a species co-occurrence layer
-
-Next, generate a raster layer displaying areas of co-occurrence of
-multiple species using the *generate_species_co_occurrence_layer*
-function. This function returns a single raster layer, and accepts
-multiple USDA Plants species codes. The function returns a layer with
-occurrence of ALL of the provided species.
-
-**Warning:** This function should only be used to analyze areas of
-occurrence within a species’ known range, not to determine a species’
-range. RangeMap is likely to indicate species occurrence extending
-beyond the known range of a species; these results should be viewed with
-caution.
-
-``` r
-# Generate cheatgrass co-occurrence with Wyoming big sagebrush raster
-generate_species_co_occurrence_layer(raster_path = raster_path,
-                                  attributes_path = attributes_path,
-                                  species_codes = c("BRTE","ARTRW8"),
-                                  AOI = AOI, 
-                                  output_directory = output_directory,
-                                  n_cores=2)
-
-# Load and plot cheatgrass and sagebrush occurrence
-cheatgrass_sage<- rast("E:/RangeMap/vignette/outputs/Occurrence_BRTEandARTRW8.tif")
-levels(cheatgrass_sage)<- data.frame(id = 1, label = "BRTE and ARTRW8 present")
-plot(cheatgrass_sage, col = "forestgreen", plg = list(x = "bottomright"),
-     main = "Cheatgrass and Wyoming Big Sagebrush Co-Occurrence")
-```
-
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
