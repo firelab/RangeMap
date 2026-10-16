@@ -4,16 +4,6 @@
 #' @return The column index and the name of all numeric attributes that can be generated
 #' @export
 #'
-#' @examples
-#'
-#' # Load attribute names
-#' attribute_names<- load_attribute_names(attributes_path)
-#'
-#' # Make vector of desired attribute names (or column indices of the desired attributes returned by load_attribute_names)
-#'   # (this is needed for the generate_attribute_layers function)
-#' attribute_ids<- attribute_names$attribute_name[c(1:2, 77, 120)]   # Vector of attribute names
-#' attribute_ids<- c(1:2, 77, 120) # Vector of numeric column indices returned from load_attribute_names
-#'
 #'
 load_attribute_names<- function(attributes_path){
 

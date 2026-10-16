@@ -77,7 +77,7 @@ generate_attribute_layers(raster_path = raster_path,
                           attribute_ids = attribute_names,
                           AOI = AOI,
                           output_directory = output_directory,
-                          n_cores = 2)
+                          n_cores=2)
 
 # Load the cheatgrass outputs
 fh_cheatgrass<- rast("E:/RangeMap/vignette/outputs/FirstHit_CheatgrassCover.tif")
