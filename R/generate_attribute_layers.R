@@ -30,7 +30,8 @@
 #'                           attributes_path = attributes_path,
 #'                           attribute_ids = attribute_ids,
 #'                           AOI = AOI,
-#'                           output_directory = output_directory)
+#'                           output_directory = output_directory,
+#'                           n_cores = 2)
 #'
 #'
 generate_attribute_layers<- function(raster_path,

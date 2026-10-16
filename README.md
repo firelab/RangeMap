@@ -142,3 +142,35 @@ plot(cheatgrass, col = "forestgreen", plg = list(x = "bottomright"),
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+## Generate a species co-occurrence layer
+
+Next, generate a raster layer displaying areas of co-occurrence of
+multiple species using the *generate_species_co_occurrence_layer*
+function. This function returns a single raster layer, and accepts
+multiple USDA Plants species codes. The function returns a layer with
+occurrence of ALL of the provided species.
+
+**Warning:** This function should only be used to analyze areas of
+occurrence within a species’ known range, not to determine a species’
+range. RangeMap is likely to indicate species occurrence extending
+beyond the known range of a species; these results should be viewed with
+caution.
+
+``` r
+# Generate cheatgrass co-occurrence with Wyoming big sagebrush raster
+generate_species_co_occurrence_layer(raster_path = raster_path,
+                                  attributes_path = attributes_path,
+                                  species_codes = c("BRTE","ARTRW8"),
+                                  AOI = AOI, 
+                                  output_directory = output_directory,
+                                  n_cores=2)
+
+# Load and plot cheatgrass and sagebrush occurrence
+cheatgrass_sage<- rast(paste0(output_directory, "/Occurrence_BRTEandARTRW8.tif"))
+levels(cheatgrass_sage)<- data.frame(id = 1, label = "BRTE and ARTRW8 present")
+plot(cheatgrass_sage, col = "forestgreen", plg = list(x = "bottomright"),
+     main = "Cheatgrass and Wyoming Big Sagebrush Co-Occurrence")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
