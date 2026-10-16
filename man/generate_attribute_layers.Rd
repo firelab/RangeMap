@@ -35,23 +35,3 @@ Raster files of each desired attribute
 \description{
 Generate raster layers of individual attributes.
 }
-\examples{
-
-# First load attribute names
-  #attribute_names<- load_attribute_names(attributes_path)
-
-# Make vector of the desired attribute names (or column indices of desired attributes returned by load_attribute_names)
-  #attribute_ids<- attribute_names$attribute_name[c(1:2, 77, 120)]   # Vector of attribute names
-attribute_ids<- c(1:2, 77, 120) # Vector of numeric column indices returned from load_attribute_names
-
-
-# Generate the desired attributes
-#generate_attribute_layers(raster_path = raster_path,
-#                           attributes_path = attributes_path,
-#                          attribute_ids = attribute_ids,
-#                         AOI = AOI,
-#                         output_directory = output_directory)
-
-
-
-}
