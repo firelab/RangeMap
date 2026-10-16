@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?><metadata>
+    <idinfo>
+        <citation>
+            <citeinfo>
+                <origin/>
+                <origin/>
+                <pubdate>20181103</pubdate>
+                <title>BLM Nevada Administrative Unit Boundary Polygons</title>
+                <geoform>vector digital data</geoform>
+                <pubinfo>
+                    <publish>Bureau of Land Management</publish>
+                </pubinfo>
+                <pubinfo>
+                    <pubplace/>
+                    <publish>Bureau of Land Management, Nevada State Office</publish>
+                </pubinfo>
+                <othercit>This is considered source data for the BLM administrative state of Nevada which is used to create the aggregate national dataset.</othercit>
+                <onlink>https://gbp-blm-egis.hub.arcgis.com/pages/nevada</onlink>
+            </citeinfo>
+        </citation>
+        <descript>
+            <abstract>This polygon feature class represents the spatial extent of active BLM Nevada Administrative Unit Boundaries at the State, District, and Field Office levels.</abstract>
+            <purpose>This polygon feature class shows the physical boundary of BLM Nevada Administrative Units.  A Bureau of Land Management (BLM) Administrative Unit is a geographic area in which an organizational unit of the BLM has distinct jurisdictional responsibility for land and resource management activities occurring on the public lands, the maintained rights of the United States (i.e. mineral estate) and actions relating to the Trust responsibilities of the U.S. Government as stipulated in Law or Treaty.
+
+In some cases, the administrative unit may manage areas outside of the boundary for other programs’ purposes.</purpose>
+            <supplinf>A published revision of the Department Manual’s Part 305: Departmental Science Effects, Chapter 3: Integrity of Scientific and Scholarly Activities (305 DM 3), effective December 16, 2014, is available online at http://elips.doi.gov/ELIPS/DocView.aspx?id=4056. Scholarly information considered in Departmental decision making must be robust, of the highest quality, and the result of as rigorous scientific and scholarly processes as can be achieved. Most importantly, it must be trustworthy. This policy helps us to achieve that standard (http://www.doi.gov/scientificintegrity/index.cfm).
+
+Each state office has a Data Steward or Contact Person for this data. Please contact the specific state office for additional information on their state dataset.</supplinf>
+        </descript>
+        <timeperd>
+            <timeinfo>
+                <sngdate>
+                    <caldate>20181103</caldate>
+                </sngdate>
+            </timeinfo>
+            <current>publication date</current>
+        </timeperd>
+        <status>
+            <progress>Complete</progress>
+            <update>As needed</update>
+        </status>
+        <spdom>
+            <bounding>
+                <westbc>-120.236339</westbc>
+                <eastbc>-113.794532</eastbc>
+                <northbc>42.032015</northbc>
+                <southbc>34.989866</southbc>
+            </bounding>
+        </spdom>
+        <keywords>
+            <theme>
+                <themekt>BLM-THEME</themekt>
+                <themekey>Geospatial</themekey>
+                <themekey>Management</themekey>
+            </theme>
+            <theme>
+                <themekt>NONE</themekt>
+                <themekey>Administrative Units</themekey>
+                <themekey>BLM</themekey>
+                <themekey>Bureau of Land Management</themekey>
+                <themekey>Governmental Units and Administrative and Statistical Boundaries</themekey>
+                <themekey>Jurisdiction</themekey>
+                <themekey>Public Lands</themekey>
+            </theme>
+            <theme>
+                <themekt>ISO 19115 Topic Categories</themekt>
+                <themekey>boundaries</themekey>
+                <themekey>location</themekey>
+                <themekey>planningCadastre</themekey>
+            </theme>
+            <place>
+                <placekt>BLM-STATE</placekt>
+                <placekey>Nevada</placekey>
+            </place>
+            <place>
+                <placekt>NONE</placekt>
+                <placekey>United States</placekey>
+                <placekey>Western States</placekey>
+            </place>
+        </keywords>
+        <accconst>These are data made available to the public and are considered public domain. These data contain no sensitive information which would be prevented from disclosure by Freedom of Information Act (FOIA), the Privacy Act or other laws.</accconst>
+        <useconst>These data are provided by Bureau of Land Management (BLM) “as is” and may contain errors or omissions. The User assumes the entire risk associated with its use of these data and bears all responsibility in determining whether these data are fit for the User’s intended use. The information contained in these data is dynamic and may change over time. The data are not better than the original sources from which they were derived, and both scale and accuracy may vary across the data set. These data may not have the accuracy, resolution, completeness, timeliness, or other characteristics appropriate for applications that potential users of the data may contemplate. The User is encouraged to carefully consider the content of the metadata file associated with these data. These data are neither legal documents nor land surveys, and must not be used as such. Official records may be referenced at most BLM offices. Please report any errors in the data to the BLM office for which it was obtained. The BLM should be cited as the data source in any products derived from these data. Any Users wishing to modify the data should describe the types of modifications they have performed. The User should not misrepresent the data, nor imply that changes made were approved or endorsed by BLM. This information may be updated without notification.</useconst>
+        <ptcontac>
+            <cntinfo>
+                <cntorgp>
+                    <cntorg>U.S. Department of Interior, Bureau of Land Management (BLM), Nevada State Office (NSO) GIS Staff</cntorg>
+                    <cntper>GIS Manager</cntper>
+                </cntorgp>
+                <cntpos>GIS Manager</cntpos>
+                <cntaddr>
+                    <addrtype>physical</addrtype>
+                    <address>1340 Financial Blvd</address>
+                    <city>Reno</city>
+                    <state>NV</state>
+                    <postal>89502</postal>
+                    <country>US</country>
+                </cntaddr>
+                <cntvoice>(775) 861-6565</cntvoice>
+                <cntemail>nviac@blm.gov</cntemail>
+                <hours>0800 - 0430 Mon - Fri PST</hours>
+                <cntinst>Please contact our GIS Manager for District Office level steward or subject matter expert contact information.</cntinst>
+            </cntinfo>
+        </ptcontac>
+        <datacred>Reference and acknowledge the Bureau of Land Management in products derived from this map. Bureau of Land Management, Nevada State Office</datacred>
+        <secinfo>
+            <secsys>None</secsys>
+            <secclass>Unclassified</secclass>
+            <sechandl>None</sechandl>
+        </secinfo>
+        <native>Esri ArcGIS 10.1.1.3143</native>
+        <crossref>
+            <citeinfo>
+                <title>BLM Nevada Administrative Unit Boundary Polygons</title>
+            </citeinfo>
+        </crossref>
+    </idinfo>
+    <dataqual>
+        <attracc>
+            <attraccr>Based on intersection of multiple GIS layers
+</attraccr>
+        </attracc>
+        <logic>This dataset (BLM Nevada) is used to create a national dataset via aggregation from multiple datasets provided by the BLM Administrative States. Please contact the distributor for additional information on provenance, history, accuracy and quality of the data. The logical consistency of this dataset reflects that of the source datasets. Each source dataset is run through a series of tests to verify that the data complies with the format specified in the Data Standard. ERRORS AND INCONSISTENCIES MAY STILL BE PRESENT IN THE DATA. These tests were conducted using ESRI ArcMap 10.1. The tests consisted of checking coded values for attributes against a domain of accepted values, checking that alpha-numeric values followed a valid format, and checking that numeric values were greater than zero. For the geometry, the topology was validated; however overlaps and gaps can still be found.</logic>
+        <complete>This dataset (BLM Nevada) is used to create a national dataset via aggregation from multiple datasets provided by the BLM Administrative States. Please contact the distributor for additional information on provenance, history, accuracy and quality of the data. The completeness of this dataset reflects that of the source datasets.</complete>
+        <posacc>
+            <horizpa>
+                <horizpar>Based on intersection of multiple GIS layers
+</horizpar>
+            </horizpa>
+        </posacc>
+        <lineage>
+            <srcinfo>
+                <srccite>
+                    <citeinfo>
+                        <origin/>
+                        <pubdate>20190220</pubdate>
+                        <title>H-1283-2 Data Administration and Management Handbook</title>
+                        <edition>Release 1-1762</edition>
+                        <onlink>http://web.blm.gov/internal/wo-500/directives/dir-hdbk/h1283-2.pdf</onlink>
+                    </citeinfo>
+                </srccite>
+                <typesrc>onLine</typesrc>
+                <srctime>
+                    <timeinfo>
+                        <sngdate>
+                            <caldate>20190220</caldate>
+                        </sngdate>
+                    </timeinfo>
+                    <srccurr>publication date</srccurr>
+                </srctime>
+                <srccitea>H-1283-2 Data Administration and Management Handbook</srccitea>
+                <srccontr>This official BLM Data Management handbook contains information about how data is administered, managed, and tracked.  This handbook discusses how the BLM operates with regard to data development and design, quality, metadata, and business rules.  The information this resource contains also pertains to geospatial data.</srccontr>
+            </srcinfo>
+            <procstep>
+                <procdesc>Using the implementation guidelines, GIS staff at BLM Nevada State Office cross-walk and clean up their data to comply with the standardized national dataset. Then, the BLM field and/or state offices submit the data to the National Operations Center (NOC), where it is compiled to produce seamless national datasets.  This process of data replication to the National Operations Center is intended to occur on a monthly basis.</procdesc>
+                <procdate>20181103</procdate>
+                <proccont>
+                    <cntinfo>
+                        <cntorgp>
+                            <cntorg>Bureau of Land Management (BLM), Nevada State Office</cntorg>
+                        </cntorgp>
+                        <cntpos>GIS Manager</cntpos>
+                        <cntaddr>
+                            <addrtype>physical</addrtype>
+                            <address>1340 Financial Blvd</address>
+                            <city>Reno</city>
+                            <state>NV</state>
+                            <postal>89502</postal>
+                            <country>US</country>
+                        </cntaddr>
+                        <cntvoice>(775)861-6500</cntvoice>
+                        <cntemail>nviac@blm.gov</cntemail>
+                    </cntinfo>
+                </proccont>
+            </procstep>
+        </lineage>
+    </dataqual>
+    <spdoinfo>
+        <direct>Vector</direct>
+        <ptvctinf>
+            <sdtsterm>
+                <sdtstype>Complete chain</sdtstype>
+                <ptvctcnt>15</ptvctcnt>
+            </sdtsterm>
+        </ptvctinf>
+    </spdoinfo>
+    <eainfo xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <detailed>
+            <enttyp>
+                <enttypl>admu_ofc_poly</enttypl>
+                <enttypd>BLM Administrative Unit Boundary Polygons</enttypd>
+                <enttypds>BLM Administrative Units (Boundaries) Implementation Guidelines</enttypds>
+            </enttyp>
+            <attr>
+                <attrlabl>OBJECTID</attrlabl>
+                <attrdef>Internal feature number.</attrdef>
+                <attrdefs>Esri</attrdefs>
+                <attrdomv>
+                                        
+                    <udom>Sequential unique whole numbers that are automatically generated.</udom>
+                                    
+                </attrdomv>
+            </attr>
+            <attr>
+                <attrlabl>ADM_UNIT_CD</attrlabl>
+                <attrdef>The code that indicates the formal grouping of positions into designated units and the assignment of functions and responsibilities to those units based on the DOI FPPS structure</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>ADMU_NAME</attrlabl>
+                <attrdef>The official name by which the organization is known.  An organization may include businesses, agencies, or corporations, but not individual persons.</attrdef>
+                <attrdefs>BLM Administrative Units (Boundaries) Implementation Guidelines</attrdefs>
+            </attr>
+            <attr>
+                <attrlabl>BLM_ORG_TYPE</attrlabl>
+                <attrdef>A name that indicates the type of organization that is being described.</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>APPRV_DT</attrlabl>
+                <attrdef>Approval date</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>EFF_DT</attrlabl>
+                <attrdef>Effective date</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>ADMU_ST_URL</attrlabl>
+                <attrdef>The URL of the State Office website. The standard format for a BLM state website is http://www.blm.gov/xx/st/en.html where “xx” is the 2-character state abbreviation.</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>PARENT_CD</attrlabl>
+                <attrdef>The identifier for the administrative unit that has responsibility for other units.</attrdef>
+                <attrdefs>BLM Administrative Units (Boundaries) Implementation Guidelines</attrdefs>
+                <attrdomv>
+                                        
+                    <codesetd>
+                                                
+                        <codesetn>DOM_ADM_UNIT_CD</codesetn>
+                                                
+                        <codesets>BLM Administrative Units (Boundaries) Implementation Guidelines</codesets>
+                                            
+                    </codesetd>
+                                    
+                </attrdomv>
+            </attr>
+            <attr>
+                <attrlabl>PARENT_NAME</attrlabl>
+                <attrdef>The official name by which the organization is known. An organization may include businesses, agencies, or corporations, but not individual persons.</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>ADMIN_ST</attrlabl>
+                <attrdef>An alphabetic abbreviation that represents each of hte 50 states of the United States, the District of Columbia, the outlying areas of the United States, and associated areas.  FIPS PUB 5-2.</attrdef>
+                <attrdefs>BLM Administrative Units (Boundaries) Implementation Guidelines</attrdefs>
+                <attrdomv>
+                                        
+                    <codesetd>
+                                                
+                        <codesetn>DOM_ADMIN_ST</codesetn>
+                                                
+                        <codesets>BLM Administrative Units (Boundaries) Implementation Guidelines</codesets>
+                                            
+                    </codesetd>
+                                    
+                </attrdomv>
+            </attr>
+            <attr>
+                <attrlabl>GlobalID</attrlabl>
+                <attrdef>Global ID</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>created_user</attrlabl>
+                <attrdef>Created user</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>created_date</attrlabl>
+                <attrdef>Created date</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>last_edited_user</attrlabl>
+                <attrdef>Last edited user</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>last_edited_date</attrlabl>
+                <attrdef>Last edited date</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>SHAPE</attrlabl>
+                <attrdef>Feature geometry.</attrdef>
+                <attrdefs>Esri</attrdefs>
+                <attrdomv>
+                                        
+                    <udom>Coordinates defining the features.</udom>
+                                    
+                </attrdomv>
+            </attr>
+            <attr>
+                <attrlabl>SHAPE.STArea()</attrlabl>
+                <attrdef>Area of feature in internal units squared.</attrdef>
+            </attr>
+            <attr>
+                <attrlabl>SHAPE.STLength()</attrlabl>
+                <attrdef>Shape length</attrdef>
+            </attr>
+        </detailed>
+        <overview>
+            <eaover>See the BLM Administrative Units (Boundaries) Implementation Guidelines.</eaover>
+        </overview>
+    </eainfo>
+    <distinfo>
+        <distrib>
+            <cntinfo>
+                <cntorgp>
+                    <cntorg>Bureau of Land Management, Nevada State Office</cntorg>
+                </cntorgp>
+                <cntpos>GIS Manager</cntpos>
+                <cntaddr>
+                    <addrtype>mailing and physical</addrtype>
+                    <address>1340 Financial Blvd</address>
+                    <city>Reno</city>
+                    <state>NV</state>
+                    <postal>89502</postal>
+                    <country>US</country>
+                </cntaddr>
+                <cntemail>nviac@blm.gov</cntemail>
+            </cntinfo>
+        </distrib>
+        <distliab>The BLM assumes no responsibility for errors or omissions. No warranty is made by the BLM as to the accuracy, reliability, or completeness of these data for individual use or aggregate use with other data; nor shall the act of distribution to contractors, partners, or beyond, constitute any such warranty for individual or aggregate data use with other data. Although these data have been processed successfully on computers of BLM, no warranty, expressed or implied, is made by BLM regarding the use of these data on any other system, or for general or scientific purposes, nor does the fact of distribution constitute or imply any such warranty. In no event shall the BLM have any liability whatsoever for payment of any consequential, incidental, indirect, special, or tort damages of any kind, including, but not limited to, any loss of profits arising out of the use or reliance on the geographic data or arising out of the delivery, installation, operation, or support by BLM.</distliab>
+    </distinfo>
+    <metainfo>
+        <metd>20241021</metd>
+        <metrd>20241021</metrd>
+        <metc>
+            <cntinfo>
+                <cntorgp>
+                    <cntorg>Bureau of Land Management (BLM), Nevada State Office</cntorg>
+                </cntorgp>
+                <cntpos>GIS Manager</cntpos>
+                <cntaddr>
+                    <addrtype>physical</addrtype>
+                    <address>1340 Financial Blvd</address>
+                    <city>Reno</city>
+                    <state>CO</state>
+                    <postal>89502</postal>
+                    <country>US</country>
+                </cntaddr>
+                <cntvoice>(775)861-6500</cntvoice>
+                <cntemail>nviac@blm.gov</cntemail>
+            </cntinfo>
+        </metc>
+        <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+        <metstdv>FGDC-STD-001-1998</metstdv>
+        <mettc>local time</mettc>
+        <metsi>
+            <metscs>None</metscs>
+            <metsc>Unclassified</metsc>
+            <metshd>None</metshd>
+        </metsi>
+    </metainfo
