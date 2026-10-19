@@ -45,8 +45,8 @@ library(RangeMap)
 library(terra)
 
 # Set paths to rangemap ID raster and attributes file
-raster_path<- system.file("extdata", "RangeMap_2025.tif", package = "RangeMap")
-attributes_path<- system.file("extdata", "RangeMap_Attributes.csv", package = "RangeMap")
+raster_path<- system.file("extdata", "RangeMap_2025_example.tif", package = "RangeMap")
+attributes_path<- system.file("extdata", "RangeMap_Attributes_example.csv", package = "RangeMap")
 
 # Set directory for outputs
 output_directory<- file.path(tempdir(), "RangeMap_outputs")
@@ -94,6 +94,7 @@ breaks<- quantile(values(understory_cheatgrass, na.rm=T), probs = seq(0, 1, by =
 plot(understory_cheatgrass, breaks = unique(breaks), 
      col = hcl.colors(length(unique(breaks)) - 1, "Viridis"),
      main = "Understory Cheatgrass Cover (%)")
+plot(AOI, add=T)
 
 # Summarize understory cheatgrass cover
 summary(values(understory_cheatgrass, na.rm=T))
@@ -122,6 +123,8 @@ cheatgrass<- rast(paste0(output_directory, "/Occurrence_BRTE.tif"))
 levels(cheatgrass)<- data.frame(id = 1, label = "BRTE present")
 plot(cheatgrass, col = "forestgreen", plg = list(x = "bottomright"),
      main = "Cheatgrass Occurrence")
+plot(AOI, add=T)
+
 
 ```
 
@@ -147,5 +150,7 @@ cheatgrass_sage<- rast(paste0(output_directory, "/Occurrence_BRTEandARTRW8.tif")
 levels(cheatgrass_sage)<- data.frame(id = 1, label = "BRTE and ARTRW8 present")
 plot(cheatgrass_sage, col = "forestgreen", plg = list(x = "bottomright"),
      main = "Cheatgrass and Wyoming Big Sagebrush Co-Occurrence")
+plot(AOI, add=T)
+
 
 ```
