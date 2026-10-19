@@ -37,14 +37,14 @@ Generate raster layers of individual attributes.
 }
 \examples{
 # First load attribute names
-attributes_path <- system.file("extdata", "RangeMap_Attributes.csv", package = "RangeMap")
+attributes_path <- system.file("extdata", "RangeMap_Attributes_example.csv", package = "RangeMap")
 attribute_names <- load_attribute_names(attributes_path)
 
 # Make vector of the desired attribute names or indices
 attribute_ids <- attribute_names$attribute_name[c(1:2)]
 
 # Generate the desired attributes
-raster_path <- system.file("extdata", "RangeMap_2025.tif", package = "RangeMap")
+raster_path <- system.file("extdata", "RangeMap_2025_example.tif", package = "RangeMap")
 aoi_path <- system.file("extdata", "BLM_NV_FieldOffices/BLM_NV_FieldOffices.shp", package = "RangeMap")
 AOI <- terra::vect(aoi_path)
 AOI <- AOI[AOI$ADMU_NAME == "Black Rock Field Office", ]
