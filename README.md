@@ -15,7 +15,7 @@ To get started you’ll need to install `{RangeMap}` using the following
 command:
 
 ``` r
-remotes::install_github("firelab/RangeMap")
+remotes::install_github("firelab/RangeMap", build_vignettes = T)
 ```
 
 You must also have downloaded a RangeMap imputed ID raster for a given
@@ -40,8 +40,8 @@ library(RangeMap)
 library(terra)
 
 # Set paths to rangemap ID raster and attributes file
-raster_path<- system.file("extdata", "RangeMap_2025.tif", package = "RangeMap")
-attributes_path<- system.file("extdata", "RangeMap_Attributes.csv", package = "RangeMap")
+raster_path<- system.file("extdata", "RangeMap_2025_example.tif", package = "RangeMap")
+attributes_path<- system.file("extdata", "RangeMap_Attributes_example.csv", package = "RangeMap")
 
 # Set directory for outputs
 output_directory<- file.path(tempdir(), "RangeMap_outputs")
@@ -93,11 +93,13 @@ breaks<- quantile(values(understory_cheatgrass, na.rm=T), probs = seq(0, 1, by =
 plot(understory_cheatgrass, breaks = unique(breaks), 
      col = hcl.colors(length(unique(breaks)) - 1, "Viridis"),
      main = "Understory Cheatgrass Cover (%)")
+plot(terra::project(AOI, terra::crs(understory_cheatgrass)), add=T, border="black", lwd=1.5)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ``` r
+
 
 # Summarize understory cheatgrass cover
 summary(values(understory_cheatgrass, na.rm=T))
@@ -136,9 +138,12 @@ generate_species_occurrence_layer(raster_path = raster_path,
 # Load and plot cheatgrass occurrence
 cheatgrass<- rast(paste0(output_directory, "/Occurrence_BRTE.tif"))
 
+
+
 levels(cheatgrass)<- data.frame(id = 1, label = "BRTE present")
 plot(cheatgrass, col = "forestgreen", plg = list(x = "bottomright"),
      main = "Cheatgrass Occurrence")
+plot(terra::project(AOI, terra::crs(cheatgrass)), add=T, border="black", lwd=1.5)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
@@ -171,6 +176,7 @@ cheatgrass_sage<- rast(paste0(output_directory, "/Occurrence_BRTEandARTRW8.tif")
 levels(cheatgrass_sage)<- data.frame(id = 1, label = "BRTE and ARTRW8 present")
 plot(cheatgrass_sage, col = "forestgreen", plg = list(x = "bottomright"),
      main = "Cheatgrass and Wyoming Big Sagebrush Co-Occurrence")
+plot(terra::project(AOI, terra::crs(cheatgrass_sage)), add=T, border="black", lwd=1.5)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->

@@ -24,7 +24,7 @@ This vignette shows the core functionality of the RangeMap package to work with 
 To get started you'll need to install `{RangeMap}` using the following command:
 
 ```{r, eval = FALSE}
-remotes::install_github("firelab/RangeMap")
+remotes::install_github("firelab/RangeMap", build_vignettes = T)
 ```
 
 You must also have downloaded a RangeMap imputed ID raster for a given year, as well as the attributes associated with the raster (either in .csv or .dbf form). These data can be accessed at: https://www.fs.usda.gov/rds/archive/catalog/RDS-2026-0058
@@ -94,7 +94,8 @@ breaks<- quantile(values(understory_cheatgrass, na.rm=T), probs = seq(0, 1, by =
 plot(understory_cheatgrass, breaks = unique(breaks), 
      col = hcl.colors(length(unique(breaks)) - 1, "Viridis"),
      main = "Understory Cheatgrass Cover (%)")
-plot(AOI, add=T)
+plot(terra::project(AOI, terra::crs(understory_cheatgrass)), add=T, border="black", lwd=1.5)
+
 
 # Summarize understory cheatgrass cover
 summary(values(understory_cheatgrass, na.rm=T))
@@ -120,11 +121,12 @@ generate_species_occurrence_layer(raster_path = raster_path,
 # Load and plot cheatgrass occurrence
 cheatgrass<- rast(paste0(output_directory, "/Occurrence_BRTE.tif"))
 
+
+
 levels(cheatgrass)<- data.frame(id = 1, label = "BRTE present")
 plot(cheatgrass, col = "forestgreen", plg = list(x = "bottomright"),
      main = "Cheatgrass Occurrence")
-plot(AOI, add=T)
-
+plot(terra::project(AOI, terra::crs(cheatgrass)), add=T, border="black", lwd=1.5)
 
 ```
 
@@ -150,7 +152,6 @@ cheatgrass_sage<- rast(paste0(output_directory, "/Occurrence_BRTEandARTRW8.tif")
 levels(cheatgrass_sage)<- data.frame(id = 1, label = "BRTE and ARTRW8 present")
 plot(cheatgrass_sage, col = "forestgreen", plg = list(x = "bottomright"),
      main = "Cheatgrass and Wyoming Big Sagebrush Co-Occurrence")
-plot(AOI, add=T)
-
+plot(terra::project(AOI, terra::crs(cheatgrass_sage)), add=T, border="black", lwd=1.5)
 
 ```
