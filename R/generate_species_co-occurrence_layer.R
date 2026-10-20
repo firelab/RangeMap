@@ -215,7 +215,7 @@ generate_species_co_occurrence_layer<- function(raster_path,
     core_budget_bytes<- ((avail_mb * 0.5) / n_cores) * 1024^2
 
     # Apply memory overhead padding, and account for raster datatype
-    r_overhead_factor<- 5
+    r_overhead_factor<- 20
     bytes_per_cell<- r_overhead_factor * 4  # 4 bytes per cell for INT4U raster datatype
 
     # Calculate maximum allowable cells per tile and ideal dimensions
