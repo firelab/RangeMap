@@ -103,13 +103,14 @@ generate_species_occurrence_layer<- function(raster_path,
   }
   #
   run_tiles<- function(tiles_to_process, max_retries = 5){
+    # Track failed tiles so they can be re-run
     all_failed_log<- list()
     n_total<- length(tiles_to_process)
 
     report<- function(done, total, attempt){
       pct<- floor(100 * done / total)
       lab<- if (attempt > 1) sprintf(" (retry %d)", attempt - 1) else ""
-      message(sprintf("Tiles: %d%% done (%d/%d)%s", pct, done, total, lab))
+      message(sprintf("Progress: %d%% finished", pct, lab))
     }
 
     for (attempt in seq_len(max_retries + 1)){
@@ -119,7 +120,7 @@ generate_species_occurrence_layer<- function(raster_path,
       cores <- min(n_cores, n_tiles)
 
       # Separate tiles into batches so progress can be printed along the way
-      batch_size<- max(n_cores, ceiling(n_tiles / 20))
+      batch_size<- max(cores, ceiling(n_tiles / 20))
       batches<- split(seq_len(n_tiles), ceiling(seq_len(n_tiles) / batch_size))
       results<- vector("list", n_tiles)
       done<- 0
