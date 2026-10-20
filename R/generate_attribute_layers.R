@@ -236,7 +236,7 @@ generate_attribute_layers<- function(raster_path,
     core_budget_bytes<- ((avail_mb * 0.5) / n_cores) * 1024^2
 
     # Apply memory overhead padding, and account for raster datatype
-    r_overhead_factor<- 3
+    r_overhead_factor<- 5
     bytes_per_cell<- r_overhead_factor * 4  # 4 bytes per cell for INT4U raster datatype
 
     # Calculate maximum allowable cells per tile and ideal dimensions
