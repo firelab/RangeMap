@@ -1,9 +1,10 @@
 Package: RangeMap
 Title: RangeMap
-Version: 0.0.1.4000
+Version: 0.1.0
 Authors@R: 
     person("Scott", "Zimmer", , "scott.zimmer@usda.gov", role = c("aut", "cre"))
-Description: This package provides functions to easily generate and work with attribute layers derived from the RangeMap plot imputation product. From the original RangeMap plot ID raster and plot attributes (from either .csv or .dbf), raster layers of individual attributes can easily be generated and saved for an area of interest.
+Maintainer: Scott Zimmer <scott.zimmer@usda.gov>
+Description: This package provides functions to work with data from the RangeMap model (https://doi.org/10.2737/RDS-2026-0058). This model provides a raster layer of plot IDs and many vegetation attributes associated with the plots, including plant functional group cover, vegetation heights, species composition, fuels, soil stability, and canopy gaps. The RangeMap package allows users to generate raster layers of plot attributes, or areas of species occurrence.
 License: GPL (>= 3)
 Config/roxygen2/version: 8.1.0
 Encoding: UTF-8

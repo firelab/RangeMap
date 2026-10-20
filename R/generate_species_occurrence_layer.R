@@ -175,12 +175,12 @@ generate_species_occurrence_layer<- function(raster_path,
     tile_size_adjustment<- 1
   }
   #
-  freeRAM_mb<- terra::free_RAM() / 1024
-  budget_bytes<- ((freeRAM_mb * 0.5) / n_cores) * 1024^2
-  max_cells<- budget_bytes / (32 * 20)
-  tile_dim<- max(floor(sqrt(max_cells)), 500) * tile_size_adjustment
+  RAM_mb<- ps::ps_system_memory()$total / 1024^2
+  budget_bytes<- ((RAM_mb * 0.5) / n_cores) * 1024^2
+  max_cells<- budget_bytes / 20
+  tile_dim<- max(floor(sqrt(max_cells)), 1000) * tile_size_adjustment
 
-  # Generate tiles, only needs to be done once regardless of the number of attributes being generated
+  # Generate tiles
   terra::setGDALconfig("GDAL_PAM_ENABLED", "NO")
   tile_files<- terra::makeTiles(
     ras,

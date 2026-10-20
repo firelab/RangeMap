@@ -20,7 +20,8 @@
 #'
 #' # Generate the desired attributes
 #' raster_path <- system.file("extdata", "RangeMap_2025_example.tif", package = "RangeMap")
-#' aoi_path <- system.file("extdata", "BLM_NV_FieldOffices/BLM_NV_FieldOffices.shp", package = "RangeMap")
+#' aoi_path <- system.file("extdata", "BLM_NV_FieldOffices/BLM_NV_FieldOffices.shp",
+#' package = "RangeMap")
 #' AOI <- terra::vect(aoi_path)
 #' AOI <- AOI[AOI$ADMU_NAME == "Black Rock Field Office", ]
 #' output_directory <- file.path(tempdir(), "RangeMap_outputs")
@@ -66,9 +67,9 @@ generate_attribute_layers<- function(raster_path,
     dplyr::mutate(dplyr::across(dplyr::everything(), round))
   #
   # Remove "Value" and "Count" columns if table source is .dbf
-  if(endsWith(attributes_path, ".dbf")){
+  if (endsWith(attributes_path, ".dbf")) {
     attributes<- attributes |>
-      dplyr::select(-c(Value, Count))
+      dplyr::select(-dplyr::all_of(c("Value", "Count")))
   }
 
   # Check attribute names
@@ -227,10 +228,10 @@ generate_attribute_layers<- function(raster_path,
     tile_size_adjustment<- 1
   }
   #
-  freeRAM_mb<- terra::free_RAM() / 1024
-  budget_bytes<- ((freeRAM_mb * 0.5) / n_cores) * 1024^2
-  max_cells<- budget_bytes / (32 * 20)
-  tile_dim<- max(floor(sqrt(max_cells)), 500) * tile_size_adjustment
+  RAM_mb<- ps::ps_system_memory()$total / 1024^2
+  budget_bytes<- ((RAM_mb * 0.5) / n_cores) * 1024^2
+  max_cells<- budget_bytes / 20
+  tile_dim<- max(floor(sqrt(max_cells)), 1000) * tile_size_adjustment
 
   # Generate tiles, only needs to be done once regardless of the number of attributes being generated
   terra::setGDALconfig("GDAL_PAM_ENABLED", "NO")
