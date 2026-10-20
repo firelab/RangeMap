@@ -143,7 +143,7 @@ generate_species_co_occurrence_layer<- function(raster_path,
           for (b in batches){
             results[b]<- parallel::clusterApplyLB(cl, tiles_to_process[b], process_tile)
             done<- done + length(b)
-            report(done, n_tiles, attempt)
+            report(done, n_tiles)
           }
         }, finally = try(parallel::stopCluster(cl), silent = TRUE))
       } else {
