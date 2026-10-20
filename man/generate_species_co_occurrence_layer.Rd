@@ -33,7 +33,7 @@ generate_species_co_occurrence_layer(
 Raster file showing occurrence of ALL of the species codes provided
 }
 \description{
-This function can be used to generate raster layers showing areas of occurrence of multiple species.
+This function can be used to generate raster layers showing areas of occurrence of multiple species. It will show where ALL of the provided species occur. The generate_species_occurrence_layer function can be used to find areas where a single species occur, or where ANY of multiple provided species occur. \cr\cr
 -- Warning -- \cr\cr
 This function should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
 RangeMap is likely to indicate species occurrence extending beyond the known range of a species; these results should be viewed with caution! \cr\cr
