@@ -228,10 +228,40 @@ generate_attribute_layers<- function(raster_path,
     tile_size_adjustment<- 1
   }
   #
-  RAM_mb<- ps::ps_system_memory()$total / 1024^2
-  budget_bytes<- ((RAM_mb * 0.5) / n_cores) * 1024^2
-  max_cells<- budget_bytes / 20
-  tile_dim<- max(floor(sqrt(max_cells)), 1000) * tile_size_adjustment
+  calculate_tile_dimensions<- function(r, n_cores, tile_size_adjustment) {
+    # Get available RAM in megabytes
+    avail_mb<- terra::free_RAM() / 1024
+
+    # Calculate memory budget per core
+    core_budget_bytes<- ((avail_mb * 0.5) / n_cores) * 1024^2
+
+    # Apply memory overhead padding, and account for raster datatype
+    r_overhead_factor<- 3
+    bytes_per_cell<- r_overhead_factor * 4  # 4 bytes per cell for INT4U raster datatype
+
+    # Calculate maximum allowable cells per tile and ideal dimensions
+    max_cells<- core_budget_bytes / bytes_per_cell
+    ideal_dim<- floor(sqrt(max_cells))
+
+    # Get input raster dimensions
+    raster_nrow<- terra::nrow(r)
+    raster_ncol<- terra::ncol(r)
+
+    # Ensure minimum tile size doesn't exceed raster dimensions or drop too low
+    min_dim <- min(1000, raster_nrow, raster_ncol)
+    tile_dim <- max(ideal_dim, min_dim)
+
+    # Apply user adjustment factor
+    tile_dim <- floor(tile_dim * tile_size_adjustment)
+
+    # Final boundary clamp
+    tile_dim <- min(tile_dim, max(raster_nrow, raster_ncol))
+
+    return(tile_dim)
+  }
+
+  # Get tile dimensions
+  tile_dim<- calculate_tile_dimensions(ras, n_cores, tile_size_adjustment)
 
   # Generate tiles, only needs to be done once regardless of the number of attributes being generated
   terra::setGDALconfig("GDAL_PAM_ENABLED", "NO")
