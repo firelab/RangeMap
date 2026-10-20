@@ -1,9 +1,10 @@
 #' Generate raster layers of species occurrence.
 #'
-#' -- Warning! -- \cr\cr
-#' This feature should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
+#' This function can be used to generate raster layers showing areas of occurrence of a single species.
+#' -- Warning -- \cr\cr
+#' This function should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
 #' RangeMap is likely to indicate species occurrence extending beyond the known range of a species; these results should be viewed with caution! \cr\cr
-#' This function will only work for species whose occurrence is tracked already in the RangeMap attribute table. For example, all species defined as Sage Grouse preferred forbs are tracked in this pre-generated field, but forbs that are not Sage Grouse preferred forbs are not necessarily tracked. Unaddressed species can be added to RangeMap_Attributes.csv file to enable this workflow - contact scott.zimmer@usda.gov for assistance
+#' This function will only work for species whose occurrence is tracked already in the RangeMap attribute table. For example, all species defined as Sage Grouse preferred forbs are tracked in this pre-generated field, but forbs that are not Sage Grouse preferred forbs are not necessarily tracked. Unaddressed species can be added to RangeMap_Attributes.csv file to enable this workflow - contact scott.zimmer@usda.gov for assistance.
 #'
 #' @param raster_path Path to RangeMap raster file for a single year
 #' @param attributes_path Path to attributes table file. It is preferable to use the RangeMap_Attributes.csv so full field names are preserved, but a tif.vat.dbf file associated with one year's raster may be used
@@ -195,14 +196,14 @@ generate_species_occurrence_layer<- function(raster_path,
     raster_ncol<- terra::ncol(r)
 
     # Ensure minimum tile size doesn't exceed raster dimensions or drop too low
-    min_dim <- min(1000, raster_nrow, raster_ncol)
-    tile_dim <- max(ideal_dim, min_dim)
+    min_dim<- min(1000, raster_nrow, raster_ncol)
+    tile_dim<- max(ideal_dim, min_dim)
 
     # Apply user adjustment factor
-    tile_dim <- floor(tile_dim * tile_size_adjustment)
+    tile_dim<- floor(tile_dim * tile_size_adjustment)
 
     # Final boundary clamp
-    tile_dim <- min(tile_dim, max(raster_nrow, raster_ncol))
+    tile_dim<- min(tile_dim, max(raster_nrow, raster_ncol))
 
     return(tile_dim)
   }
@@ -229,7 +230,6 @@ generate_species_occurrence_layer<- function(raster_path,
       stop("Tiles are failing during processing. Try reducing tile_size_adjustment to less than 1!")
     }
 
-    # Mosaic all processed tiles into one raster (multiband if mulutple attributes selected)
     # Direct to processed tiles
     processed_tiles<- list.files(
       tile_temp_dir,

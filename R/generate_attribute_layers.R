@@ -298,7 +298,7 @@ generate_attribute_layers<- function(raster_path,
       stop("Tiles are failing during processing. Try reducing tile_size_adjustment to less than 1!")
     }
 
-    # Mosaic all processed tiles into one raster (multiband if mulutple attributes selected)
+    # Mosaic all processed tiles into one raster (multiband if multiple attributes selected)
     # Direct to processed tiles
     processed_tiles<- list.files(
       tile_temp_dir,
