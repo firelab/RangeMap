@@ -33,8 +33,9 @@ generate_species_occurrence_layer(
 Raster file showing occurrence of ANY of the species codes provided
 }
 \description{
--- Warning! -- \cr\cr
-This feature should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
+This function can be used to generate raster layers showing areas of occurrence of a single species.
+-- Warning -- \cr\cr
+This function should only be used to analyze areas of occurrence within a species' known range, not to determine a species' range!
 RangeMap is likely to indicate species occurrence extending beyond the known range of a species; these results should be viewed with caution! \cr\cr
-This function will only work for species whose occurrence is tracked already in the RangeMap attribute table. For example, all species defined as Sage Grouse preferred forbs are tracked in this pre-generated field, but forbs that are not Sage Grouse preferred forbs are not necessarily tracked. Unaddressed species can be added to RangeMap_Attributes.csv file to enable this workflow - contact scott.zimmer@usda.gov for assistance
+This function will only work for species whose occurrence is tracked already in the RangeMap attribute table. For example, all species defined as Sage Grouse preferred forbs are tracked in this pre-generated field, but forbs that are not Sage Grouse preferred forbs are not necessarily tracked. Unaddressed species can be added to RangeMap_Attributes.csv file to enable this workflow - contact scott.zimmer@usda.gov for assistance.
 }

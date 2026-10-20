@@ -18,12 +18,12 @@
 #'
 #'
 generate_species_occurrence_layer<- function(raster_path,
-                                     attributes_path,
-                                     species_codes,
-                                     AOI,
-                                     output_directory,
-                                     n_cores = NULL,
-                                     tile_size_adjustment = NULL){
+                                                  attributes_path,
+                                                  species_codes,
+                                                  AOI,
+                                                  output_directory,
+                                                  n_cores = NULL,
+                                                  tile_size_adjustment = NULL){
   options(warn = 1)
   #
   message("Prepping data")
@@ -103,34 +103,51 @@ generate_species_occurrence_layer<- function(raster_path,
   }
   #
   run_tiles<- function(tiles_to_process, max_retries = 5){
-    # Track failed tiles so they can be re-run
     all_failed_log<- list()
+    n_total<- length(tiles_to_process)
+
+    report<- function(done, total, attempt){
+      pct<- floor(100 * done / total)
+      lab<- if (attempt > 1) sprintf(" (retry %d)", attempt - 1) else ""
+      message(sprintf("Tiles: %d%% done (%d/%d)%s", pct, done, total, lab))
+    }
 
     for (attempt in seq_len(max_retries + 1)){
       if (length(tiles_to_process) == 0) break
 
-      cores<- min(n_cores, length(tiles_to_process))
+      n_tiles<- length(tiles_to_process)
+      cores <- min(n_cores, n_tiles)
+
+      # Separate tiles into batches so progress can be printed along the way
+      batch_size<- max(n_cores, ceiling(n_tiles / 20))
+      batches<- split(seq_len(n_tiles), ceiling(seq_len(n_tiles) / batch_size))
+      results<- vector("list", n_tiles)
+      done<- 0
 
       if (cores > 1){
         cl<- parallel::makeCluster(cores)
         parallel::clusterExport(cl, varlist = c("final_fields", "tile_temp_dir"), envir = environment())
         parallel::clusterEvalQ(cl, terra::setGDALconfig("GDAL_PAM_ENABLED", "NO"))
-        results<- tryCatch(
-          parallel::clusterApplyLB(cl, tiles_to_process, process_tile),
-          finally = try(parallel::stopCluster(cl), silent = TRUE)
-        )
+        tryCatch({
+          for (b in batches){
+            results[b]<- parallel::clusterApplyLB(cl, tiles_to_process[b], process_tile)
+            done<- done + length(b)
+            report(done, n_tiles, attempt)
+          }
+        }, finally = try(parallel::stopCluster(cl), silent = TRUE))
       } else {
-        results<- lapply(tiles_to_process, process_tile)
+        for (b in batches){
+          results[b]<- lapply(tiles_to_process[b], process_tile)
+          done<- done + length(b)
+          report(done, n_tiles, attempt)
+        }
       }
 
       results_df<- do.call(rbind, lapply(results, as.data.frame, stringsAsFactors = FALSE))
       failed<- results_df$tile[results_df$status == "failed"]
       all_failed_log[[attempt]]<- results_df[results_df$status == "failed", ]
 
-      if (length(failed) == 0){
-        return(list(failed_tiles = character(0)))
-      }
-      failed_errors<- results_df$error[results_df$status == "failed"]
+      if (length(failed) == 0) return(list(failed_tiles = character(0)))
       tiles_to_process<- failed
     }
 
@@ -220,56 +237,53 @@ generate_species_occurrence_layer<- function(raster_path,
     na.rm = TRUE
   )
 
-    #
-    # Define the fields (attributes) for this batch
-    final_fields<- fields
-    #
-    tile_result<- run_tiles(tile_files, max_retries = 5)
+  #
+  # Define the fields (attributes) for this batch
+  final_fields<- fields
+  #
+  tile_result<- run_tiles(tile_files, max_retries = 5)
 
-    if (length(tile_result$failed_tiles) > 0){
-      stop("Tiles are failing during processing. Try reducing tile_size_adjustment to less than 1!")
-    }
+  if (length(tile_result$failed_tiles) > 0){
+    stop("Tiles are failing during processing. Try reducing tile_size_adjustment to less than 1!")
+  }
 
-    # Direct to processed tiles
-    processed_tiles<- list.files(
-      tile_temp_dir,
-      pattern = "processed_tile",
-      full.names = TRUE
-    )
+  # Direct to processed tiles
+  processed_tiles<- list.files(
+    tile_temp_dir,
+    pattern = "processed_tile",
+    full.names = TRUE
+  )
 
-    message("Saving species occurrence raster")
-    terra::setGDALconfig("GDAL_MAX_DATASET_POOL_SIZE", "1000")
-    terra::setGDALconfig("GDAL_CACHEMAX","4000")
+  message("Saving species occurrence raster")
+  terra::setGDALconfig("GDAL_MAX_DATASET_POOL_SIZE", "1000")
+  terra::setGDALconfig("GDAL_CACHEMAX","4000")
 
-    # Export single mosaicked raster of processed attributes
-    vrt_file<- file.path(tile_temp_dir, "vrt.vrt")
-    terra::vrt(processed_tiles,vrt_file, set_names = TRUE, overwrite=T)
-    r<- terra::rast(vrt_file)
-    names(r)<- paste0("Occurrence_", paste0(paste(species_codes, collapse = "_")))
-    #
-    out_tif<- file.path(output_directory, paste0("Occurrence_", paste0(paste(species_codes, collapse = "or"), ".tif")))
-    #
-    dt<- "INT1U"
-    nodata<- 255
+  # Export single mosaicked raster of processed attributes
+  vrt_file<- file.path(tile_temp_dir, "vrt.vrt")
+  terra::vrt(processed_tiles,vrt_file, set_names = TRUE, overwrite=T)
+  r<- terra::rast(vrt_file)
+  names(r)<- paste0("Occurrence_", paste0(paste(species_codes, collapse = "_")))
+  #
+  out_tif<- file.path(output_directory, paste0("Occurrence_", paste0(paste(species_codes, collapse = "or"), ".tif")))
+  #
+  dt<- "INT1U"
+  nodata<- 255
 
-    if(file.exists(out_tif)){
-        warning(paste0(out_tif), " already exists and will be overwritten")
-    }
-    terra::writeRaster(
-        r,
-        out_tif,
-        datatype = dt,
-        NAflag = nodata,
-        overwrite = T,
-        gdal = c("COMPRESS=DEFLATE", "ZLEVEL=8", "PREDICTOR=2",
-                 "TILED=YES", "BLOCKXSIZE=512", "BLOCKYSIZE=512",
-                 "NUM_THREADS=ALL_CPUS", "SPARSE_OK=YES", "BIGTIFF=YES"))
+  if(file.exists(out_tif)){
+    warning(paste0(out_tif), " already exists and will be overwritten")
+  }
+  terra::writeRaster(
+    r,
+    out_tif,
+    datatype = dt,
+    NAflag = nodata,
+    overwrite = T,
+    gdal = c("COMPRESS=DEFLATE", "ZLEVEL=8", "PREDICTOR=2",
+             "TILED=YES", "BLOCKXSIZE=512", "BLOCKYSIZE=512",
+             "NUM_THREADS=ALL_CPUS", "SPARSE_OK=YES", "BIGTIFF=YES"))
 
-    # Clean up processed tiles
-    file.remove(processed_tiles)
-    file.remove(vrt_file)
-    unlink(tile_temp_dir, recursive = TRUE)
+  # Clean up processed tiles
+  file.remove(processed_tiles)
+  file.remove(vrt_file)
+  unlink(tile_temp_dir, recursive = TRUE)
 }
-
-
-
