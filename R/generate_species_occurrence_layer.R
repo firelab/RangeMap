@@ -139,7 +139,7 @@ generate_species_occurrence_layer<- function(raster_path,
         for (b in batches){
           results[b]<- lapply(tiles_to_process[b], process_tile)
           done<- done + length(b)
-          report(done, n_tiles, attempt)
+          report(done, n_tiles)
         }
       }
 
@@ -216,10 +216,10 @@ generate_species_occurrence_layer<- function(raster_path,
     min_dim<- min(1000, raster_nrow, raster_ncol)
     tile_dim<- max(ideal_dim, min_dim)
 
-    # Apply user adjustment factor
+    # Apply tile size adjustment if provided
     tile_dim<- floor(tile_dim * tile_size_adjustment)
 
-    # Final boundary clamp
+    # Final tile dimensions
     tile_dim<- min(tile_dim, max(raster_nrow, raster_ncol))
 
     return(tile_dim)

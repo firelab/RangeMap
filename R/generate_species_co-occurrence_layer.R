@@ -139,12 +139,19 @@ generate_species_co_occurrence_layer<- function(raster_path,
         cl<- parallel::makeCluster(cores)
         parallel::clusterExport(cl, varlist = c("final_fields", "tile_temp_dir"), envir = environment())
         parallel::clusterEvalQ(cl, terra::setGDALconfig("GDAL_PAM_ENABLED", "NO"))
-        results<- tryCatch(
-          parallel::clusterApplyLB(cl, tiles_to_process, process_tile),
-          finally = try(parallel::stopCluster(cl), silent = TRUE)
-        )
+        tryCatch({
+          for (b in batches){
+            results[b]<- parallel::clusterApplyLB(cl, tiles_to_process[b], process_tile)
+            done<- done + length(b)
+            report(done, n_tiles, attempt)
+          }
+        }, finally = try(parallel::stopCluster(cl), silent = TRUE))
       } else {
-        results<- lapply(tiles_to_process, process_tile)
+        for (b in batches){
+          results[b]<- lapply(tiles_to_process[b], process_tile)
+          done<- done + length(b)
+          report(done, n_tiles)
+        }
       }
 
       results_df<- do.call(rbind, lapply(results, as.data.frame, stringsAsFactors = FALSE))
@@ -223,10 +230,10 @@ generate_species_co_occurrence_layer<- function(raster_path,
     min_dim<- min(1000, raster_nrow, raster_ncol)
     tile_dim<- max(ideal_dim, min_dim)
 
-    # Apply user adjustment factor
+    # Apply tile size adjustment if provided
     tile_dim<- floor(tile_dim * tile_size_adjustment)
 
-    # Final boundary clamp
+    # Final tile dimensions
     tile_dim<- min(tile_dim, max(raster_nrow, raster_ncol))
 
     return(tile_dim)
