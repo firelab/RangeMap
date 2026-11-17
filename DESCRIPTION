@@ -1,5 +1,5 @@
 Package: RangeMap
-Title: Analysis of data from the RangeMap dataset
+Title: Analysis of outputs from the RangeMap dataset
 Version: 0.1.0
 Authors@R: 
     person("Scott", "Zimmer", , "scott.zimmer@usda.gov", role = c("aut", "cre"))
